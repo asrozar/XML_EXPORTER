@@ -69,13 +69,12 @@ def main():
 
     clear_screen()
 
-    try:
-        modules.db_connect.connect_and_create_db()
-    except:
-        print('could not create to the database')
-        exit()
-
     if nmap_xml:
+        try:
+            modules.db_connect.connect_and_create_db()
+        except:
+            print('Could not create to the database, did you modify config/database.yml?')
+            exit()
         try:
             modules.xml_parser.parse_nmap_xml(nmap_xml)
             clear_screen()
