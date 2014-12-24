@@ -416,7 +416,11 @@
       <created>1419417549063</created>
       <updated>1419417549063</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="remove .idea">
+      <created>1419417754137</created>
+      <updated>1419417754137</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TodoView" selected-index="4">
