@@ -1,3 +1,5 @@
+Script for parsing nmap xml output to xlsx format
+
 XML_EXPORTER
 ==========
 
