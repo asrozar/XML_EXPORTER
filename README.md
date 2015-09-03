@@ -34,7 +34,7 @@ To get help use the -h, or --help argument.
 
 Drop all tables from the database.
 
-     python3 perception.py --drop_all
+     python3 xml_exporter.py --drop_all
 
 ==========================================================================================
 
