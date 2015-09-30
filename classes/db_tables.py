@@ -47,113 +47,113 @@ import datetime
 
 
 def _get_date():
-    return datetime.datetime.now()
+  return datetime.datetime.now()
 
 
 class HostNseScript(Base):
-    __tablename__ = 'host_nse_scripts'
+  __tablename__ = 'host_nse_scripts'
 
-    id = Column(Integer, Sequence('host_nse_scripts_id_seq'), primary_key=True, nullable=False)
+  id = Column(Integer, Sequence('host_nse_scripts_id_seq'), primary_key=True, nullable=False)
 
-    """Relation to host"""
-    host_id = Column(Integer, ForeignKey('inventory_hosts.id'))
-    host = relationship('InventoryHost', backref='host_nse_scripts', order_by=id)
+  """Relation to host"""
+  host_id = Column(Integer, ForeignKey('inventory_hosts.id'))
+  host = relationship('InventoryHost', backref='host_nse_scripts', order_by=id)
 
-    name = Column(Text, nullable=False)
-    output = Column(Text, nullable=False)
+  name = Column(Text, nullable=False)
+  output = Column(Text, nullable=False)
 
 
 class SvcNseScript(Base):
-    __tablename__ = 'svc_nse_scripts'
+  __tablename__ = 'svc_nse_scripts'
 
-    id = Column(Integer, Sequence('svc_nse_scripts_id_seq'), primary_key=True, nullable=False)
+  id = Column(Integer, Sequence('svc_nse_scripts_id_seq'), primary_key=True, nullable=False)
 
-    """Relation to host"""
-    svc_id = Column(Integer, ForeignKey('inventory_svcs.id', ondelete='cascade'))
-    svc = relationship('InventorySvc', backref='svc_nse_scripts', order_by=id)
+  """Relation to host"""
+  svc_id = Column(Integer, ForeignKey('inventory_svcs.id', ondelete='cascade'))
+  svc = relationship('InventorySvc', backref='svc_nse_scripts', order_by=id)
 
-    name = Column(Text, nullable=False)
-    output = Column(Text, nullable=False)
+  name = Column(Text, nullable=False)
+  output = Column(Text, nullable=False)
 
 
 class Vendor(Base):
-    __tablename__ = 'vendors'
+  __tablename__ = 'vendors'
 
-    id = Column(Integer, Sequence('vendors_id_seq'), primary_key=True, nullable=False)
-    name = Column(Text, unique=True, nullable=False)
+  id = Column(Integer, Sequence('vendors_id_seq'), primary_key=True, nullable=False)
+  name = Column(Text, unique=True, nullable=False)
 
 
 class Product(Base):
-    __tablename__ = 'products'
+  __tablename__ = 'products'
 
-    id = Column(Integer, Sequence('products_id_seq'), primary_key=True, nullable=False)
+  id = Column(Integer, Sequence('products_id_seq'), primary_key=True, nullable=False)
 
-    product_type = Column(Text, nullable=False)
+  product_type = Column(Text, nullable=False)
 
-    """Relation to tie vendors to products"""
-    vendor_id = Column(Integer, ForeignKey('vendors.id'), nullable=False)
-    vendor = relationship('Vendor', backref='products', order_by=id)
+  """Relation to tie vendors to products"""
+  vendor_id = Column(Integer, ForeignKey('vendors.id'), nullable=False)
+  vendor = relationship('Vendor', backref='products', order_by=id)
 
-    name = Column(Text, nullable=False)
-    version = Column(Text)
-    product_update = Column(Text)
-    edition = Column(Text)
-    language = Column(Text)
+  name = Column(Text, nullable=False)
+  version = Column(Text)
+  product_update = Column(Text)
+  edition = Column(Text)
+  language = Column(Text)
 
 
 class InventoryHost(Base):
-    __tablename__ = 'inventory_hosts'
+  __tablename__ = 'inventory_hosts'
 
-    id = Column(Integer, Sequence('inventory_hosts_id_seq'), primary_key=True, nullable=False)
-    ipv4_addr = Column(postgresql.INET, unique=True)
-    ipv6_addr = Column(postgresql.INET)
-    macaddr = Column(postgresql.MACADDR)
-    host_type = Column(Text)
+  id = Column(Integer, Sequence('inventory_hosts_id_seq'), primary_key=True, nullable=False)
+  ipv4_addr = Column(postgresql.INET, unique=True)
+  ipv6_addr = Column(postgresql.INET)
+  macaddr = Column(postgresql.MACADDR)
+  host_type = Column(Text)
 
-    """Relation to tie mac address vendors to inventory hosts"""
-    mac_vendor_id = Column(Integer, ForeignKey('mac_vendors.id'))
-    mac_vendor = relationship('MACVendor', backref='inventory_hosts', order_by=id)
+  """Relation to tie mac address vendors to inventory hosts"""
+  mac_vendor_id = Column(Integer, ForeignKey('mac_vendors.id'))
+  mac_vendor = relationship('MACVendor', backref='inventory_hosts', order_by=id)
 
-    state = Column(Text)
-    host_name = Column(Text)
+  state = Column(Text)
+  host_name = Column(Text)
 
-    """Relation to tie an OS inventory hosts"""
-    product_id = Column(Integer, ForeignKey('products.id', ondelete='cascade'))
-    product = relationship('Product', backref='inventory_hosts', order_by=id)
+  """Relation to tie an OS inventory hosts"""
+  product_id = Column(Integer, ForeignKey('products.id', ondelete='cascade'))
+  product = relationship('Product', backref='inventory_hosts', order_by=id)
 
-    arch = Column(Text)
+  arch = Column(Text)
 
-    info = Column(Text)
-    comments = Column(Text)
+  info = Column(Text)
+  comments = Column(Text)
 
-    created_at = Column(TIMESTAMP(timezone=False), default=_get_date)
-    updated_at = Column(TIMESTAMP(timezone=False), onupdate=_get_date)
+  created_at = Column(TIMESTAMP(timezone=False), default=_get_date)
+  updated_at = Column(TIMESTAMP(timezone=False), onupdate=_get_date)
 
 
 class InventorySvc(Base):
-    __tablename__ = 'inventory_svcs'
+  __tablename__ = 'inventory_svcs'
 
-    id = Column(Integer, Sequence('inventory_svcs_id_seq'), primary_key=True, nullable=False)
+  id = Column(Integer, Sequence('inventory_svcs_id_seq'), primary_key=True, nullable=False)
 
-    """Relation to inventory hosts"""
-    host_id = Column(Integer, ForeignKey('inventory_hosts.id'))
-    host = relationship('InventoryHost', backref='inventory_svcs', order_by=id)
+  """Relation to inventory hosts"""
+  host_id = Column(Integer, ForeignKey('inventory_hosts.id'))
+  host = relationship('InventoryHost', backref='inventory_svcs', order_by=id)
 
-    protocol = Column(Text)
-    portid = Column(Integer)
-    name = Column(Text)
-    svc_product = Column(Text)
-    extra_info = Column(Text)
+  protocol = Column(Text)
+  portid = Column(Integer)
+  name = Column(Text)
+  svc_product = Column(Text)
+  extra_info = Column(Text)
 
-    """Relation to tie products to inventory services"""
-    product_id = Column(Integer, ForeignKey('products.id'))
-    product = relationship('Product', backref='inventory_svcs', order_by=id)
+  """Relation to tie products to inventory services"""
+  product_id = Column(Integer, ForeignKey('products.id'))
+  product = relationship('Product', backref='inventory_svcs', order_by=id)
 
-    created_at = Column(TIMESTAMP(timezone=False), default=_get_date)
+  created_at = Column(TIMESTAMP(timezone=False), default=_get_date)
 
 
 class MACVendor(Base):
-    __tablename__ = 'mac_vendors'
+  __tablename__ = 'mac_vendors'
 
-    id = Column(Integer, Sequence('mac_vendors_id_seq'), primary_key=True, nullable=False)
-    name = Column(Text, unique=True)
+  id = Column(Integer, Sequence('mac_vendors_id_seq'), primary_key=True, nullable=False)
+  name = Column(Text, unique=True)

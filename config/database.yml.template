@@ -1,9 +1,8 @@
 #
 # Database connection info
 
+drivername: postgresql
 host: db_svr
 database: db
-pool: 5
-timeout: 5000
 username: db_user
 password: db_user_passwd

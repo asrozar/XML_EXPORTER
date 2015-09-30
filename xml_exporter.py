@@ -47,68 +47,98 @@ import modules.export_xlsx
 
 
 def main():
-    parser = argparse.ArgumentParser('--nmap_xml, --xlsx_export, --drop_all')
-    parser.add_argument('--nmap_xml', dest='nmap_xml', type=str, help='NMAP XML file to parse.')
-    parser.add_argument('--xlsx_export', dest='xlsx_export', action='store_true',
-                        help='Export to XLSX after parsing.')
-    parser.add_argument('--drop_all', dest='drop_all', action='store_true',
-                        help='Drop all tables from the database.')
+  parser = argparse.ArgumentParser('--nmap_xml, --xlsx_export, --drop_all')
 
-    args = parser.parse_args()
-    nmap_xml = args.nmap_xml
-    xlsx_export = args.xlsx_export
-    drop_all = args.drop_all
+  parser.add_argument('--nmap_xml',
+                      dest='nmap_xml',
+                      type=str,
+                      help='NMAP XML file to parse.')
 
-    if drop_all:
-        clear_screen()
-        if input('Are you sure?: ') == 'yes':
-            modules.db_connect.connect_and_drop_all()
-            clear_screen()
-            print('Dropped all tables.')
-            exit()
+  parser.add_argument('--xlsx_export',
+                      dest='xlsx_export',
+                      action='store_true',
+                      help='Export to XLSX after parsing.')
 
-    clear_screen()
+  parser.add_argument('--drop_all',
+                      dest='drop_all',
+                      action='store_true',
+                      help='Drop all tables from the database.'),
 
-    if nmap_xml:
-        try:
-            modules.db_connect.connect_and_create_db()
-        except:
-            print('Could not create to the database, did you modify config/database.yml?')
-            exit()
-        try:
-            modules.xml_parser.parse_nmap_xml(nmap_xml)
-            clear_screen()
-            print('Done.')
-        except IsADirectoryError:
-            print('I can not read an entire directory')
-            exit()
+  parser.add_argument('--test_yml_file',
+                      dest='test_yml_file',
+                      action='store_true',
+                      help='Test the Data Base file and connection')
 
-        if xlsx_export:
-            clear_screen()
-            print('Generating report..')
-            modules.export_xlsx.exporter()
-            clear_screen()
-            print('Done.')
-            exit()
-        exit()
+  args = parser.parse_args()
+  nmap_xml = args.nmap_xml
+  xlsx_export = args.xlsx_export
+  drop_all = args.drop_all
+  test_yml_file = args.test_yml_file
 
-    if xlsx_export:
-        clear_screen()
-        print('Generating report..')
-        modules.export_xlsx.exporter()
-        clear_screen()
-        print('Done.')
-        exit()
+  if test_yml_file:
+    try:
+      modules.db_connect.connect()
+    except TypeError as e:
+      print('Some thing went wrong, Error: %s' % e)
+      exit()
+    print('YML file is good.')
+    exit()
 
-    else:
-        clear_screen()
-        print('I need arguments.')
-        parser.print_help()
-        exit()
+  if drop_all:
+      clear_screen()
+      if input('Are you sure?: ') == 'yes':
+          modules.db_connect.connect_and_drop_all()
+          clear_screen()
+          print('Dropped all tables.')
+          exit()
+
+  clear_screen()
+
+  if nmap_xml:
+      try:
+          modules.db_connect.connect_and_create_db()
+      except:
+          print('Could not create to the database, did you modify config/database.yml?')
+          exit()
+      try:
+          modules.xml_parser.parse_nmap_xml(nmap_xml)
+          clear_screen()
+          print('Done.')
+      except IsADirectoryError:
+          print('I can not read an entire directory')
+          exit()
+
+      if xlsx_export:
+          clear_screen()
+          print('Generating report..')
+          modules.export_xlsx.exporter()
+          clear_screen()
+          print('Done.')
+          exit()
+      exit()
+
+  if xlsx_export:
+      clear_screen()
+      print('Generating report..')
+      modules.export_xlsx.exporter()
+      clear_screen()
+      print('Done.')
+      exit()
+
+  else:
+      clear_screen()
+      print('I need arguments.')
+      parser.print_help()
+      exit()
 
 
 def clear_screen():
-    os.system('clear')
+  os.system('clear')
 
 if __name__ == '__main__':
+  try:
     main()
+  except (IOError, SystemExit):
+    raise
+  except KeyboardInterrupt:
+    print('Crtl+C Pressed. Shutting down.')
