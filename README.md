@@ -62,6 +62,5 @@ One open caveat does exist:
 
     Just click "repair and open". This is due to the merging of cells during the host detail worksheet.
 
-    I'm working to resolve this issue ASAP.
 
 ==========================================================================================
